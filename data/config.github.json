@@ -19,11 +19,11 @@
     "default_profile": "finance-news",
     "profile_settings": {
       "finance-news": {
-        "threshold": 6,
+        "threshold": 4,
         "topic_dedup": true
       },
       "tech-news": {
-        "threshold": 6,
+        "threshold": 4,
         "topic_dedup": true
       }
     }

@@ -293,6 +293,20 @@ class HorizonOrchestrator:
             self.console.print(
                 f"{self.icons['ai']} Analyzed {len(analyzed_items)} items with AI\n"
             )
+            scores = [
+                item.processing.analysis.score
+                for item in analyzed_items
+                if item.processing
+                and item.processing.analysis
+                and item.processing.analysis.score is not None
+            ]
+            self.console.print(
+                "   Score distribution: "
+                f"0-3={sum(score < 4 for score in scores)}, "
+                f"4-5={sum(4 <= score < 6 for score in scores)}, "
+                f"6-10={sum(score >= 6 for score in scores)}, "
+                f"missing={len(analyzed_items) - len(scores)}\n"
+            )
 
             # 5. Filter, deduplicate, and balance the digest
             filtering_result = await self.select_digest_items(
