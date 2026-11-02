@@ -1,0 +1,57 @@
+name: Horizon Daily Digest
+
+on:
+  schedule:
+    # 23:00 UTC = 07:00 Asia/Shanghai on the following day.
+    - cron: '0 23 * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: horizon-daily
+  cancel-in-progress: false
+
+jobs:
+  daily-summary:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v6
+        with:
+          version: "0.11.26"
+
+      - name: Install dependencies
+        run: uv sync --frozen
+
+      - name: Prepare Horizon config
+        run: cp data/config.github.json data/config.json
+
+      - name: Generate bilingual digest
+        env:
+          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+        run: |
+          if [ -z "$DEEPSEEK_API_KEY" ]; then
+            echo "::error::Set DEEPSEEK_API_KEY in repository secrets"
+            exit 1
+          fi
+          uv run --no-sync horizon --hours 24
+
+      - name: Publish to GitHub Pages branch
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs
+          keep_files: true
+          publish_branch: gh-pages
+          enable_jekyll: true
+          commit_message: "Horizon daily digest"

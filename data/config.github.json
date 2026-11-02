@@ -1,0 +1,169 @@
+{
+  "ai": {
+    "provider": "deepseek",
+    "model": "deepseek-flash",
+    "base_url": "https://api.deepseek.com",
+    "api_key_env": "DEEPSEEK_API_KEY",
+    "temperature": 0.3,
+    "max_tokens": 8192,
+    "throttle_sec": 1,
+    "languages": [
+      "zh",
+      "en"
+    ],
+    "analysis_concurrency": 3,
+    "enrichment_concurrency": 2
+  },
+  "processing": {
+    "profiles_dir": "profiles",
+    "default_profile": "finance-news",
+    "profile_settings": {
+      "finance-news": {
+        "threshold": 6,
+        "topic_dedup": true
+      },
+      "tech-news": {
+        "threshold": 6,
+        "topic_dedup": true
+      }
+    }
+  },
+  "sources": {
+    "hackernews": {
+      "enabled": false
+    },
+    "reddit": {
+      "enabled": false
+    },
+    "telegram": {
+      "enabled": false
+    },
+    "rss": [
+      {
+        "name": "A股 · Google News",
+        "url": "https://news.google.com/rss/search?q=A%E8%82%A1%20OR%20%E6%B2%AA%E6%B7%B1%E8%82%A1%E5%B8%82%20when%3A1d&hl=zh-CN&gl=CN&ceid=CN%3Azh-Hans",
+        "enabled": true,
+        "category": "a-share",
+        "profile": "finance-news",
+        "max_items": 5
+      },
+      {
+        "name": "港股 · Google News",
+        "url": "https://news.google.com/rss/search?q=%E6%B8%AF%E8%82%A1%20OR%20%E6%81%92%E7%94%9F%E6%8C%87%E6%95%B0%20when%3A1d&hl=zh-HK&gl=HK&ceid=HK%3Azh-Hant",
+        "enabled": true,
+        "category": "hk-share",
+        "profile": "finance-news",
+        "max_items": 5
+      },
+      {
+        "name": "美股 · Google News",
+        "url": "https://news.google.com/rss/search?q=US%20stocks%20OR%20S%26P%20500%20OR%20Nasdaq%20when%3A1d&hl=en-US&gl=US&ceid=US%3Aen",
+        "enabled": true,
+        "category": "us-share",
+        "profile": "finance-news",
+        "max_items": 5
+      },
+      {
+        "name": "AI · Google News",
+        "url": "https://news.google.com/rss/search?q=artificial%20intelligence%20OR%20AI%20models%20when%3A1d&hl=en-US&gl=US&ceid=US%3Aen",
+        "enabled": true,
+        "category": "ai",
+        "profile": "tech-news",
+        "max_items": 5
+      },
+      {
+        "name": "美伊局势 · Google News",
+        "url": "https://news.google.com/rss/search?q=US%20Iran%20conflict%20OR%20US%20Iran%20war%20when%3A1d&hl=en-US&gl=US&ceid=US%3Aen",
+        "enabled": true,
+        "category": "geopolitics",
+        "profile": "finance-news",
+        "max_items": 5
+      },
+      {
+        "name": "油价 · Google News",
+        "url": "https://news.google.com/rss/search?q=Brent%20crude%20OR%20oil%20prices%20when%3A1d&hl=en-US&gl=US&ceid=US%3Aen",
+        "enabled": true,
+        "category": "oil",
+        "profile": "finance-news",
+        "max_items": 5
+      },
+      {
+        "name": "美联储 · Google News",
+        "url": "https://news.google.com/rss/search?q=Federal%20Reserve%20OR%20FOMC%20when%3A1d&hl=en-US&gl=US&ceid=US%3Aen",
+        "enabled": true,
+        "category": "fed",
+        "profile": "finance-news",
+        "max_items": 5
+      },
+      {
+        "name": "黄金 · Google News",
+        "url": "https://news.google.com/rss/search?q=gold%20prices%20OR%20spot%20gold%20when%3A1d&hl=en-US&gl=US&ceid=US%3Aen",
+        "enabled": true,
+        "category": "gold",
+        "profile": "finance-news",
+        "max_items": 5
+      },
+      {
+        "name": "Federal Reserve Monetary Policy",
+        "url": "https://www.federalreserve.gov/feeds/press_monetary.xml",
+        "enabled": true,
+        "category": "fed",
+        "profile": "finance-news",
+        "max_items": 5
+      },
+      {
+        "name": "HKEX News Releases",
+        "url": "https://www.hkex.com.hk/Services/RSS-Feeds/News-Releases?sc_lang=en",
+        "enabled": true,
+        "category": "hk-share",
+        "profile": "finance-news",
+        "max_items": 5
+      },
+      {
+        "name": "EIA Today in Energy",
+        "url": "https://www.eia.gov/rss/todayinenergy.xml",
+        "enabled": true,
+        "category": "oil",
+        "profile": "finance-news",
+        "max_items": 5
+      }
+    ]
+  },
+  "collection": {
+    "time_window_hours": 24
+  },
+  "digest": {
+    "max_items": 16,
+    "category_groups": {
+      "equities": {
+        "limit": 6,
+        "categories": [
+          "a-share",
+          "hk-share",
+          "us-share"
+        ]
+      },
+      "macro": {
+        "limit": 4,
+        "categories": [
+          "geopolitics",
+          "fed"
+        ]
+      },
+      "commodities": {
+        "limit": 4,
+        "categories": [
+          "oil",
+          "gold"
+        ]
+      },
+      "ai": {
+        "limit": 3,
+        "categories": [
+          "ai"
+        ]
+      }
+    },
+    "default_group": "other"
+  }
+}
